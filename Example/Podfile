@@ -1,0 +1,15 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'TwitterGifComposer_Example', :exclusive => true do
+  pod "TwitterGifComposer", :path => "../"
+end
+
+target 'TwitterGifComposer_Tests', :exclusive => true do
+  pod "TwitterGifComposer", :path => "../"
+
+  pod 'Quick', '~> 0.3.1'
+  pod 'Nimble'
+  pod 'FBSnapshotTestCase'
+  pod 'Nimble-Snapshots'
+end
