@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'TwitterGifComposer_Example', :exclusive => true do
   pod "TwitterGifComposer", :path => "../"
+  pod 'FLAnimatedImage', '~> 1.0'
 end
 
 target 'TwitterGifComposer_Tests', :exclusive => true do

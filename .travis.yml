@@ -2,6 +2,7 @@
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
+osx_image: beta-xcode6.3
 language: objective-c
 # cache: cocoapods
 # podfile: Example/Podfile
@@ -10,6 +11,10 @@ language: objective-c
 # - pod install --project-directory=Example
 install:
 - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+- gem install cocoapods
+- pod install --project-directory=Example
 script:
-- set -o pipefail && xcodebuild test -workspace Example/TwitterGifComposer.xcworkspace -scheme TwitterGifComposer-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
-- pod lib lint --quick
+#- set -o pipefail && xcodebuild test -workspace Example/TwitterGifComposer.xcworkspace -scheme TwitterGifComposer-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
+#- pod lib lint --quick
+
+- xctool test -workspace Example/TwitterGifComposer.xcworkspace/ -scheme TwitterGifComposer-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO

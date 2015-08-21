@@ -7,9 +7,45 @@
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Native iOS twitter composer does NOT support gif. This composer will help if you need to post gifs.
+
+Although this project does NOT rely on [FLAnimatedImage](https://github.com/Flipboard/FLAnimatedImage), but it can do better with it.
+
+        class ViewController: UIViewController, TwitterGifComposerDelegate {
+
+        /* ... */
+
+        @IBAction func touchUpInside(sender: AnyObject) {
+
+            var path = NSBundle.mainBundle().pathForResource("abc", ofType: "gif")
+            var data = NSData(contentsOfFile: path!)
+            self.twitterGifComposer = TwitterGifComposer.defaultComposer(delegate: self, rootViewController: self).withText("Post Gif").withGifData(data!)
+
+            /*
+                The image view in composer only show static image, by default.
+                But if FLAnimatedImage is also imported, you can replace it as FLAnimatedImageView
+            */
+            var animatedImageView = FLAnimatedImageView(frame: CGRectZero)
+            animatedImageView.animatedImage = FLAnimatedImage(GIFData: data!)
+            animatedImageView.startAnimating()
+            self.twitterGifComposer!.attachFLAnimatedImageView(animatedImageView)
+
+            /* show the composer */
+            self.twitterGifComposer!.show()
+
+        }
+
+        func onPostFailed() { }
+
+        func onPostSuccessed() { }
+
+        func onStopPost() { }
+
+![alt tag](http://i.imgur.com/S5Il9FE.png)
 
 ## Requirements
+
+iOS 8.0
 
 ## Installation
 
@@ -18,6 +54,13 @@ it, simply add the following line to your Podfile:
 
 ```ruby
 pod "TwitterGifComposer"
+```
+
+## Installation
+
+### Cocoapods
+```ruby
+pod "SwiftySurrogate"
 ```
 
 ## Author
