@@ -34,12 +34,12 @@ class AccountManager {
     
     func getLastUsedAccountName() -> String? {
         if self.localAccounts.count == 0 {
-            println("AccountManager -> Error: There is no twiiter account in this device.")
+            print("AccountManager -> Error: There is no twiiter account in this device.", terminator: "")
             return nil
         }
-        println(self.localAccounts.count)
+        print(self.localAccounts.count, terminator: "")
         if self.localAccounts.count <= self.lastSelectedIndex {
-            println("AccountManager -> Error: Twitter accounts array index out of bounds")
+            print("AccountManager -> Error: Twitter accounts array index out of bounds", terminator: "")
             return nil
         }
         return self.localAccounts[self.lastSelectedIndex].username
@@ -47,7 +47,7 @@ class AccountManager {
     
     func isBuiltInTwitterServiceAvailable() -> Bool {
         if !SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
-            println("AccountManager -> Error: Device hasn't built-in twitter service. (Running on an emulator?)")
+            print("AccountManager -> Error: Device hasn't built-in twitter service. (Running on an emulator?)", terminator: "")
             return false
         }
         return true
@@ -56,36 +56,36 @@ class AccountManager {
     /* 
     This needs Social.framework & Accounts.framework & network connection
     */
-    func chooseTwitterAccount(#parentView: UIView, actionSheetDelegate: UIActionSheetDelegate) {
+    func chooseTwitterAccount(parentView parentView: UIView, actionSheetDelegate: UIActionSheetDelegate) {
         
         if !isBuiltInTwitterServiceAvailable() {
             return
         }
         
-        var accountStore = ACAccountStore.new()
-        var accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
+        let accountStore = ACAccountStore()
+        let accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
         
         if !self.gotAccounts {
             accountStore.requestAccessToAccountsWithType(accountType, options: nil,
                 completion: { granted, error in
                     if (!granted) {
-                        println("AccountManager -> failed, no account granted")
+                        print("AccountManager -> failed, no account granted", terminator: "")
                         return
                     } else {
-                        println("AccountManager -> ok, account granted")
+                        print("AccountManager -> ok, account granted", terminator: "")
                     }
                 
-                    var accounts = accountStore.accountsWithAccountType(accountType)
+                    let accounts = accountStore.accountsWithAccountType(accountType)
                     self.localAccounts = accounts
                     self.gotAccounts = true
                     
                     // return to main loop, choose a Twitter account
                     dispatch_async(dispatch_get_main_queue(), {
-                        var actionSheet = UIActionSheet.new()
+                        let actionSheet = UIActionSheet()
                         actionSheet.title = "Twitter Account"
                         for account in accounts {
                             actionSheet.addButtonWithTitle(account.username)
-                            println(account.username)
+                            print(account.username, terminator: "")
                         }
                         actionSheet.addButtonWithTitle("cancel")
                         actionSheet.cancelButtonIndex = accounts.count
@@ -96,7 +96,7 @@ class AccountManager {
             
         } else {
             // Let user choose a Twitter account
-            var actionSheet = UIActionSheet.new()
+            let actionSheet = UIActionSheet()
             actionSheet.title = "Twitter Account"
             for account in self.localAccounts {
                 actionSheet.addButtonWithTitle(account.username)
@@ -121,14 +121,12 @@ class AccountManager {
     
     func postTwitterWithGifData(data: NSData, twitterText: String, onFailBlock: () -> Void, onSuccessBlock: () -> Void) {
         
-        var gifImage = UIImage(data: data)
+        let account = self.localAccounts[self.lastSelectedIndex] as! ACAccount
         
-        var account = self.localAccounts[self.lastSelectedIndex] as! ACAccount
+        let url = NSURL(string: "https://api.twitter.com/1.1/statuses/update_with_media.json")
+        let params = ["status": twitterText]
         
-        var url = NSURL(string: "https://api.twitter.com/1.1/statuses/update_with_media.json")
-        var params = ["status": twitterText]
-        
-        var request = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: SLRequestMethod.POST, URL: url, parameters: params)
+        let request = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: SLRequestMethod.POST, URL: url, parameters: params)
         
         request.account = account
         request.addMultipartData(data, withName: "media[]", type: "image/gif", filename: "image.gif")
@@ -136,16 +134,16 @@ class AccountManager {
         request.performRequestWithHandler() { (data, response, error) -> Void in
             dispatch_async(dispatch_get_main_queue(), {
                 if response == nil {
-                    println("AccountManager -> twitter no response, error: \(error.debugDescription)")
+                    print("AccountManager -> twitter no response, error: \(error.debugDescription)", terminator: "")
                     onFailBlock()
                     return
                 }
                 
                 if response.debugDescription.contains("status code: 200") {
-                    println("AccountManager -> Post ok")
+                    print("AccountManager -> Post ok", terminator: "")
                     onSuccessBlock()
                 } else {
-                    println("AccountManager -> Post failed. response: \(response.debugDescription)")
+                    print("AccountManager -> Post failed. response: \(response.debugDescription)", terminator: "")
                     onFailBlock()
                 }
             })

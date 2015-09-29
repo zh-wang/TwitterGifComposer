@@ -12,9 +12,9 @@ import Foundation
 class RoundedCornerViewDrawUtils {
     
     class func drawBezierRoundedRect(rect: CGRect, color: UIColor, cornerRadius: CGFloat) {
-        var context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()
         
-        var bezierPath = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        let bezierPath = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
         CGContextSetStrokeColorWithColor(context, color.CGColor)
         
         bezierPath.stroke()
@@ -29,17 +29,17 @@ class RoundedCornerViewDrawUtils {
     
     class func drawBorderRounderRect(bounds: CGRect, borderColor: UIColor, fillColor: UIColor, borderWidth: CGFloat, cornerRadius: CGFloat) {
         
-        var context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()
         
         CGContextSetLineWidth(context, borderWidth);
         CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
         CGContextSetFillColorWithColor(context, fillColor.CGColor);
         
-        var rrect = CGRectInset(bounds, borderWidth, borderWidth)
+        let rrect = CGRectInset(bounds, borderWidth, borderWidth)
         
         var radius : CGFloat = cornerRadius;
-        var width = CGRectGetWidth(rrect);
-        var height = CGRectGetHeight(rrect);
+        let width = CGRectGetWidth(rrect);
+        let height = CGRectGetHeight(rrect);
         
         if (radius > width/2.0) {
             radius = width/2.0;
@@ -49,12 +49,12 @@ class RoundedCornerViewDrawUtils {
             radius = height/2.0;
         }
         
-        var minx = CGRectGetMinX(rrect);
-        var midx = CGRectGetMidX(rrect);
-        var maxx = CGRectGetMaxX(rrect);
-        var miny = CGRectGetMinY(rrect);
-        var midy = CGRectGetMidY(rrect);
-        var maxy = CGRectGetMaxY(rrect);
+        let minx = CGRectGetMinX(rrect);
+        let midx = CGRectGetMidX(rrect);
+        let maxx = CGRectGetMaxX(rrect);
+        let miny = CGRectGetMinY(rrect);
+        let midy = CGRectGetMidY(rrect);
+        let maxy = CGRectGetMaxY(rrect);
         CGContextMoveToPoint(context, minx, midy);
         CGContextAddArcToPoint(context, minx, miny, midx, miny, radius);
         CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius);
@@ -62,7 +62,7 @@ class RoundedCornerViewDrawUtils {
         CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius);
         CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius);
         CGContextClosePath(context);
-        CGContextDrawPath(context, kCGPathFillStroke);
+        CGContextDrawPath(context, CGPathDrawingMode.FillStroke);
     }
     
 }

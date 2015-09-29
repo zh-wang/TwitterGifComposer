@@ -37,14 +37,14 @@ class ViewController: UIViewController, TwitterGifComposerDelegate {
     }
     
     @IBAction func touchUpInside(sender: AnyObject) {
-        var path = NSBundle.mainBundle().pathForResource("abc", ofType: "gif")
-        var data = NSData(contentsOfFile: path!)
+        let path = NSBundle.mainBundle().pathForResource("abc", ofType: "gif")
+        let data = NSData(contentsOfFile: path!)
         self.twitterGifComposer = TwitterGifComposer.defaultComposer(delegate: self, rootViewController: self).withText("Post Gif").withGifData(data!)
         
-        var animatedImageView = FLAnimatedImageView(frame: CGRectZero)
-        animatedImageView.animatedImage = FLAnimatedImage(GIFData: data!)
-        animatedImageView.startAnimating()
-        self.twitterGifComposer!.attachFLAnimatedImageView(animatedImageView)
+//        let animatedImageView = FLAnimatedImageView(frame: CGRectZero)
+//        animatedImageView.animatedImage = FLAnimatedImage(GIFData: data!)
+//        animatedImageView.startAnimating()
+//        self.twitterGifComposer!.attachFLAnimatedImageView(animatedImageView)
         
         self.twitterGifComposer!.show()
     }

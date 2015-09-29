@@ -9,8 +9,7 @@ end
 target 'TwitterGifComposer_Tests', :exclusive => true do
   pod "TwitterGifComposer", :path => "../"
 
-  pod 'Quick', '~> 0.3.1'
-  pod 'Nimble'
-  pod 'FBSnapshotTestCase'
-  pod 'Nimble-Snapshots'
+  # If you're using Xcode 7 / Swift 2
+  pod 'Quick', '~> 0.6.0'
+  pod 'Nimble', '2.0.0-rc.3'
 end

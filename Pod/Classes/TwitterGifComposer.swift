@@ -18,9 +18,9 @@ public protocol TwitterGifComposerDelegate: NSObjectProtocol {
 public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDelegate {
     
     let CONTENT_LENGTH_LIMIT = 140
+    let IMAGE_AREA = CGRectMake(8, 48 + 4, UIScreen.mainScreen().bounds.size.width - 32 * 2 - 16, 80)
     
     let WIDTH = UIScreen.mainScreen().bounds.size.width - 32 * 2
-    let imageViewArea = CGRectMake(8, 48 + 4, UIScreen.mainScreen().bounds.size.width - 32 * 2 - 16, 80)
     
     var twitterPostView = RoundedCornerView(frame: CGRectZero)
     var accountManager = AccountManager.sharedManager
@@ -34,8 +34,8 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
     var text: String?
     var hasReplacedImageView: Bool = false
     
-    public class func defaultComposer(#delegate: TwitterGifComposerDelegate?, rootViewController: UIViewController) -> TwitterGifComposer {
-        var composer = TwitterGifComposer(frame: UIScreen.mainScreen().bounds)
+    public class func defaultComposer(delegate delegate: TwitterGifComposerDelegate?, rootViewController: UIViewController) -> TwitterGifComposer {
+        let composer = TwitterGifComposer(frame: UIScreen.mainScreen().bounds)
         composer.rootViewController = rootViewController
         composer.delegate = delegate
         composer.buildDefaultUI(rootViewController)
@@ -72,8 +72,8 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
             animations: { () -> Void in
                 self.alpha = 0
             }, completion: { Bool -> Void in
-                var windowCount = UIApplication.sharedApplication().windows.count
-                var nextWindow = UIApplication.sharedApplication().windows[windowCount - 2] as! UIWindow
+                let windowCount = UIApplication.sharedApplication().windows.count
+                let nextWindow = UIApplication.sharedApplication().windows[windowCount - 2] 
                 nextWindow.makeKeyAndVisible()
             })
     }
@@ -93,15 +93,13 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
             imageView.removeFromSuperview() // remove static image view from composer
         }
         self.hasReplacedImageView = true
-        animatedImageView.frame = self.imageViewArea
+        animatedImageView.frame = IMAGE_AREA
         self.twitterPostView.addSubview(animatedImageView)
     }
     
     func animateIn(view: UIView, up: Bool) {
         let movementDistance = view.frame.origin.y / 3 * 2
-        let movementDuration = 0.3
-        
-        var movement = up ? -movementDistance : movementDistance
+        let movement = up ? -movementDistance : movementDistance
         var targetFrame = view.frame
         targetFrame.origin.y = targetFrame.origin.y + movement
         
@@ -117,39 +115,38 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
         self.rootViewController = rootViewController
         self.windowLevel = UIWindowLevelAlert
         
-        var width = WIDTH
-        var startY = UIScreen.mainScreen().bounds.size.height / 2
+        let width = WIDTH
+        let startY = UIScreen.mainScreen().bounds.size.height / 2
         
         twitterPostView = RoundedCornerView(frame: CGRectMake(32, startY - 120, width, 120 * 2))
         twitterPostView.fillColor = UIColor.whiteColor()
         self.addSubview(twitterPostView)
         
-        var cancelButton = UIButton(frame: CGRectMake(8, 0, 60, 46))
+        let cancelButton = UIButton(frame: CGRectMake(8, 0, 60, 46))
         cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
         cancelButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
         cancelButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Highlighted)
         cancelButton.addTarget(self, action: Selector("tapTwitterCancelButton:"), forControlEvents: UIControlEvents.TouchUpInside)
         twitterPostView.addSubview(cancelButton)
         
-        var titleButton = UIButton(frame: CGRectMake(twitterPostView.frame.width / 2 - 50, 0, 100, 46))
-        var username = accountManager.getLastUsedAccountName()
+        let titleButton = UIButton(frame: CGRectMake(twitterPostView.frame.width / 2 - 50, 0, 100, 46))
         titleButton.setTitle("Twitter", forState: UIControlState.Normal)
         titleButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         titleButton.addTarget(self, action: Selector("tapTitleButton:"), forControlEvents: UIControlEvents.TouchUpInside)
         twitterPostView.addSubview(titleButton)
         
-        var postButton = UIButton(frame: CGRectMake(twitterPostView.frame.width - 8 - 60, 0, 60, 46))
+        let postButton = UIButton(frame: CGRectMake(twitterPostView.frame.width - 8 - 60, 0, 60, 46))
         postButton.setTitle("Post", forState: UIControlState.Normal)
         postButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
         postButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Highlighted)
         postButton.addTarget(self, action: Selector("tapTwitterPostButton:"), forControlEvents: UIControlEvents.TouchUpInside)
         twitterPostView.addSubview(postButton)
         
-        self.imageView = UIImageView(frame: CGRectMake(8, 48 + 4, twitterPostView.frame.width - 16, 80))
+        self.imageView = UIImageView(frame: IMAGE_AREA)
         imageView!.contentMode = UIViewContentMode.ScaleAspectFit
         twitterPostView.addSubview(imageView!)
         
-        var seperator = UIView(frame: CGRectMake(0, 47, twitterPostView.frame.width, 1))
+        let seperator = UIView(frame: CGRectMake(0, 47, twitterPostView.frame.width, 1))
         seperator.backgroundColor = UIColor.grayColor()
         twitterPostView.addSubview(seperator)
         
@@ -162,7 +159,7 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
         self.countLabel = UILabel(frame: CGRectMake(twitterPostView.frame.width - 32 - 4, twitterPostView.frame.height - 16 - 4, 32, 16))
         countLabel!.font = UIFont.systemFontOfSize(10)
         countLabel!.textColor = UIColor.grayColor()
-        countLabel!.text = String(format: "%d", arguments: [count(textView!.text)])
+        countLabel!.text = String(format: "%d", arguments: [textView!.text.characters.count])
         countLabel!.textAlignment = NSTextAlignment.Right
         twitterPostView.addSubview(countLabel!)
     }
@@ -172,7 +169,7 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
         if let textView = self.textView {
             textView.text = self.text // fill text content
             if let countLabel = self.countLabel {
-                countLabel.text = String(format: "%d", arguments: [count(textView.text)]) // fill counter
+                countLabel.text = String(format: "%d", arguments: [textView.text.characters.count]) // fill counter
             }
         }
         // image content
@@ -215,14 +212,14 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
     public func textViewDidChange(textView: UITextView) {
         if let countLabel = self.countLabel {
             if let textView = self.textView {
-                countLabel.text = String(format: "%d", arguments: [count(textView.text)])
+                countLabel.text = String(format: "%d", arguments: [textView.text.characters.count])
             }
         }
     }
     
     public func textView(textView: UITextView, shouldChangeTextInRange range:NSRange, replacementText text:String ) -> Bool {
         if let textView = self.textView {
-            return count(self.textView!.text) + (count(text) - range.length) <= CONTENT_LENGTH_LIMIT;
+            return textView.text.characters.count + (text.characters.count - range.length) <= CONTENT_LENGTH_LIMIT;
         }
         return true
     }
