@@ -42,28 +42,12 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
         return composer
     }
     
-    public func show() {
+    public func chooseTwitterAccount() {
         if !accountManager.isBuiltInTwitterServiceAvailable() {
             return
         }
-        
-        if accountManager.hasGotAccounts() {
-            self.FillContent()
-            self.animateIn(twitterPostView, up: true)
-            self.textView!.becomeFirstResponder()
-            self.makeKeyAndVisible()
-            
-            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut,
-                animations: { () -> Void in
-                    self.alpha = 1
-                }, completion: nil)
-            
-        } else {
-            assert(self.rootViewController != nil)
-            self.buildDefaultUI(self.rootViewController!)
-            accountManager.chooseTwitterAccount(parentView: self.rootViewController!.view, actionSheetDelegate: self)
-        }
-        
+        assert(self.rootViewController != nil)
+        accountManager.chooseTwitterAccount(parentView: self.rootViewController!.view, actionSheetDelegate: self)
     }
     
     public func hide() {
@@ -204,8 +188,17 @@ public class TwitterGifComposer: UIWindow, UITextViewDelegate, UIActionSheetDele
         self.accountManager.handleActionSheetSelection(actionSheet, buttonIndex: buttonIndex,
             onCancelBlock: { () -> Void in
                 
+                
             }, onSelectedBlock: { () -> Void in
-                self.show()
+                self.FillContent()
+                self.animateIn(self.twitterPostView, up: true)
+                self.textView!.becomeFirstResponder()
+                self.makeKeyAndVisible()
+                
+                UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut,
+                    animations: { () -> Void in
+                        self.alpha = 1
+                    }, completion: nil)
             } )
     }
     

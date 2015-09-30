@@ -24,10 +24,10 @@ class AccountManager {
     
     static var sharedManager = AccountManager()
     
-    func setGotAccounts() {
-        self.gotAccounts = true
+    func setGotAccounts(gotAccounts: Bool) {
+        self.gotAccounts = gotAccounts
     }
-    
+
     func hasGotAccounts() -> Bool {
         return self.gotAccounts
     }
@@ -79,8 +79,8 @@ class AccountManager {
                     self.localAccounts = accounts
                     self.gotAccounts = true
                     
-                    // return to main loop, choose a Twitter account
-                    dispatch_async(dispatch_get_main_queue(), {
+                    dispatch_async(dispatch_get_main_queue(), { // return to main loop
+                        // let user choose a Twitter account
                         let actionSheet = UIActionSheet()
                         actionSheet.title = "Twitter Account"
                         for account in accounts {
@@ -94,8 +94,7 @@ class AccountManager {
                     });
             })
             
-        } else {
-            // Let user choose a Twitter account
+        } else { // we already pulled accounts to LOCAL, so we fetch them from LOCAL
             let actionSheet = UIActionSheet()
             actionSheet.title = "Twitter Account"
             for account in self.localAccounts {

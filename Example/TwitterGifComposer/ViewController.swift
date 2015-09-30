@@ -41,12 +41,12 @@ class ViewController: UIViewController, TwitterGifComposerDelegate {
         let data = NSData(contentsOfFile: path!)
         self.twitterGifComposer = TwitterGifComposer.defaultComposer(delegate: self, rootViewController: self).withText("Post Gif").withGifData(data!)
         
-//        let animatedImageView = FLAnimatedImageView(frame: CGRectZero)
-//        animatedImageView.animatedImage = FLAnimatedImage(GIFData: data!)
-//        animatedImageView.startAnimating()
-//        self.twitterGifComposer!.attachFLAnimatedImageView(animatedImageView)
+        let animatedImageView = FLAnimatedImageView(frame: CGRectZero)
+        animatedImageView.animatedImage = FLAnimatedImage(GIFData: data!)
+        animatedImageView.startAnimating()
+        self.twitterGifComposer!.attachFLAnimatedImageView(animatedImageView)
         
-        self.twitterGifComposer!.show()
+        self.twitterGifComposer!.chooseTwitterAccount()
     }
     
 }
