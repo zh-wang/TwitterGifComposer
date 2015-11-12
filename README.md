@@ -56,13 +56,6 @@ it, simply add the following line to your Podfile:
 pod "TwitterGifComposer"
 ```
 
-## Installation
-
-### Cocoapods
-```ruby
-pod "SwiftySurrogate"
-```
-
 ## Author
 
 zh-wang, viennakanon@gmail.com
